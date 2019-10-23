@@ -1,0 +1,16 @@
+awk '{out=""; for(i=2;i<=NF;i++){out=out" "$i}; print out}'
+
+awk '{if ($2 ==  "xy") print NR}' filename
+
+paste file1 file2 | column -s $'\t' -t   #append file1 and file2 columnwise
+
+
+ps -eaf | grep skadkho => check all even bg process 
+ps -U skadkho
+
+for file in *.html; do
+    mv "$file" "$(basename "$file" .html).txt"
+done
+
+#replace the ith line of a file with new contnet
+awk 'NR==$i{$0="$xn $yn $zn"}1;' POSCAR_START${id} > tmp && mv tmp POSCAR_START${id}; 
