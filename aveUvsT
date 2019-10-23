@@ -1,0 +1,22 @@
+#!/bin/bash
+
+T=(1400 1200 1000 800 600)
+
+for i in "${T[@]}"
+do
+mkdir T_$i
+cp $HOME/code-source/NiTi/extend_T/* T_$i/.
+cp inputs/* T_$i/.
+cd T_$i/
+mv constants.h constantsold.h
+sed -e "s/const double T=1400;/const double T=$i;/g" constantsold.h > constants.h
+rm constantsold.h
+mv mpi.sh mpi.sh.old
+sed -e "s/ave_internal_energy/ave_internal_energy_$i/g" mpi.sh.old > mpi.sh
+rm mpi.sh.old
+
+./note
+sbatch mpi.sh
+cd ..
+
+done
