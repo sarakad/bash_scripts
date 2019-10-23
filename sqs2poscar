@@ -1,0 +1,18 @@
+#!/bin/sh
+#file = 'POSCAR'
+echo -e 'from bestsqs.out' >>POSCAR
+echo -e '1.0' >>POSCAR
+#head -n 6 bestsqs.out >>POSCAR 
+head -n 6 bestsqs.out | tail -n 3 >> POSCAR
+echo -e '\n' >>POSCAR
+na=$(grep A bestsqs.out|wc -l)
+nb=$(grep B bestsqs.out|wc -l)
+nc=$(grep C bestsqs.out|wc -l)
+nd=$(grep D bestsqs.out|wc -l)
+echo -e $na $nb $nc $nd >> POSCAR
+echo -e 'A B C D'>> POSCAR
+echo -e 'Cartesian' >> POSCAR
+grep A bestsqs.out | awk '{print $1,$2,$3}' >> POSCAR 
+grep B bestsqs.out | awk '{print $1,$2,$3}' >> POSCAR
+grep C bestsqs.out | awk '{print $1,$2,$3}' >> POSCAR
+grep D bestsqs.out | awk '{print $1,$2,$3}' >> POSCAR
