@@ -1,0 +1,20 @@
+#!/bin/bash
+
+for i in $(ls SPOSCAR*)
+do
+echo $i
+syms=($(sed -n '1p' $i))
+
+n=${#syms[@]}
+var=""
+for j in `seq 0 $(($n-1))`    #"${nums[@]}"
+do
+var=$var${syms[$j]}' '
+done
+
+
+echo $var
+awk -v n=6 -v s="$var" 'NR == n {print s} {print}' $i > $i.new
+cp $i.new $i
+rm $i.new
+done
