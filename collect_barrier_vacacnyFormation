@@ -1,0 +1,20 @@
+#!/bin/bash
+eb=$(cat ../energy.bulk)
+ebfloat=$(echo $eb |sed 's/\([0-9]*\(\.[0-9]*\)\?\)[eE]+\?\(-\?[0-9]*\)/(\1*10^\3)/g;s/^/scale=30;/'| bc)
+
+for i in $(ls -d cation-*)
+do
+cd $i/init
+runstruct_vasp -ex
+ei=$(cat energy)
+eifloat=$(echo $ei |sed 's/\([0-9]*\(\.[0-9]*\)\?\)[eE]+\?\(-\?[0-9]*\)/(\1*10^\3)/g;s/^/scale=30;/'| bc)
+ef=$(echo "$eifloat - $ebfloat"|bc -l)
+cd ../trans
+runstruct_vasp -ex
+et=$(cat energy)
+etfloat=$(echo $et |sed 's/\([0-9]*\(\.[0-9]*\)\?\)[eE]+\?\(-\?[0-9]*\)/(\1*10^\3)/g;s/^/scale=30;/'| bc)
+em=$(echo "$etfloat - $eifloat"|bc -l)
+cd ../..
+ea=$(echo "$ef + $em"|bc -l)
+echo $em $ef $ea >$i/migration_formation_activation
+done 
