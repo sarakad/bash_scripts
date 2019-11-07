@@ -1,0 +1,23 @@
+#!/bin/bash
+
+name="$1"
+
+syms=($(sed -n '1p' $name))
+line=($(sed -n '6p' $name))
+
+if [[ "$line" == "$syms" ]]; then
+
+echo 'string match'
+
+else
+
+n=${#syms[@]}
+var=""
+for i in `seq 0 $(($n-1))`    #"${nums[@]}"
+do
+var=$var${syms[$i]}' '
+done
+
+sed -i "6i$var" $name
+
+fi
