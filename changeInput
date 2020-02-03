@@ -1,0 +1,46 @@
+#!/bin/bash
+
+while read a b c d s_b s_c is_b is_c u_b u_c
+do
+
+name=$a$b$c$d
+echo $name
+echo $s_b $s_c $is_b $is_c $u_b $u_c
+cp INCAR INCAR.tmp
+sed -i 's/SYSTEM=(LiCuCo)OFM/SYSTEM='$name'FM/' INCAR.tmp
+sed -i 's/MAGMOM    = 22\*0 22\*0 22\*2 66\*0/MAGMOM    = 22\*0 22\*'$s_b' 22\*'$s_c' 66\*0/' INCAR.tmp
+sed -i 's/LDAUL=-1 2 2 -1/LDAUL=-1 '$is_b' '$is_c' -1/' INCAR.tmp
+sed -i 's/LDAUU=0.00 4.5 3.32  0.0/LDAUU=0.00 '$u_b' '$u_c'  0.0/' INCAR.tmp
+
+cp POSCAR.orig POSCAR.tmp
+sed -i 's/Li Cu Co O/'$a' '$b' '$c' '$d'/' POSCAR.tmp
+
+cat POTCAR_$a >>POTCAR
+cat POTCAR_$b >>POTCAR
+cat POTCAR_$c >>POTCAR
+cat POTCAR_$d >>POTCAR
+
+cp KPOINTS KPOINTS.tmp
+cp job.in job.in.tmp
+
+mv job.in.tmp POTCAR KPOINTS.tmp POSCAR.tmp INCAR.tmp $name/.
+cd $name
+mv job.in.tmp job.in 
+mv KPOINTS.tmp KPOINTS
+mv POSCAR.tmp POSCAR 
+mv INCAR.tmp INCAR 
+#run static vol change
+mkdir static_vol_change
+for i in {4.0,4.1,4.15,4.2,4.25,4.3}
+do
+echo $i
+mkdir -p static_vol_change/$i
+cp job.in KPOINTS INCAR POTCAR POSCAR static_vol_change/$i/.
+cd static_vol_change/$i
+sed -i 's/4.264/'$i'/' POSCAR
+cd ../..
+done
+
+cd ..
+
+done<prop_INCAR
