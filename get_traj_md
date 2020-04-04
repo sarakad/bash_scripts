@@ -1,0 +1,7 @@
+#!/bin/bash
+
+grep T OSZICAR | awk '{print $3}' > T
+grep T OSZICAR | awk '{print $7}' > F
+grep T OSZICAR | awk '{print $9}' > E0
+grep T OSZICAR | awk '{print $11}' > EK
+grep 'total pressure' OUTCAR |awk '{print $4}'>ptot
