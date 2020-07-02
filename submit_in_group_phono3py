@@ -1,0 +1,37 @@
+#!/bin/bash
+
+id=$(seq 00001 00222)
+gap=20
+#n=${#id[@]}
+#echo ${id[@]}
+for gg in {1..11} #11 group to submit
+do
+#set the id of disp
+beg=$(( $(( gg-1 ))*$gap+1 ))
+end=$(( $gg*$gap ))
+echo $beg $end
+for j in `seq $beg $end`
+do
+if [ $j -lt 10 ];then
+s=0000$j
+fi
+if [ $j -ge 10 -a $j -lt 100 ];then
+s=000$j
+fi
+if [ $j -ge 100 ];then
+s=00$j
+fi
+#submit the job
+echo $s
+cd disp-$s
+sbatch job.in
+cd ..
+done
+
+sleep 30m
+
+
+#if [ $i -lt 11 ];then
+#echo $i
+#fi
+done
