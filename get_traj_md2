@@ -10,6 +10,7 @@ grep 'total pressure' OUTCAR |awk '{print $4}'>ptot
 
 paste T F E0 EK ptot > md_out
 
+natom=$(grep NION OUTCAR |awk '{print $12}')
 timestep=$(grep POTIM OUTCAR | awk '{print $3}')
 TEBEG=$(grep TEBEG OUTCAR | awk '{print $3}')
 TEEND=$(grep TEBEG OUTCAR | awk '{print $5}')
@@ -17,7 +18,8 @@ TEEND=$(grep TEBEG OUTCAR | awk '{print $5}')
 TEEND="${TEEND:1}"
 TEBEG="${TEBEG::end-1}"
 
-echo $timestep >metadata
+echo $natom>metadata
+echo $timestep >>metadata
 echo $TEBEG >>metadata
 echo $TEEND >>metadata
 
