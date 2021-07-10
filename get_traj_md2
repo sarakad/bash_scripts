@@ -1,22 +1,25 @@
 #!/bin/bash
-
 echo "MD simulation output for vasp5.x"
 
-grep T OSZICAR | awk '{print $3}' > T
-grep T OSZICAR | awk '{print $7}' > F
-grep T OSZICAR | awk '{print $9}' > E0
-grep T OSZICAR | awk '{print $11}' > EK
-grep 'total pressure' OUTCAR |awk '{print $4}'>ptot
+#grep T OSZICAR | awk '{print $3}' > T
+#grep T OSZICAR | awk '{print $7}' > F
+#grep T OSZICAR | awk '{print $9}' > E0
+#grep T OSZICAR | awk '{print $11}' > EK
+#grep 'total pressure' OUTCAR |awk '{print $4}'>ptot
 
-paste T F E0 EK ptot > md_out
+#paste T F E0 EK ptot > md_out
 
-natom=$(grep NION OUTCAR |awk '{print $12}')
-timestep=$(grep POTIM OUTCAR | awk '{print $3}')
-TEBEG=$(grep TEBEG OUTCAR | awk '{print $3}')
-TEEND=$(grep TEBEG OUTCAR | awk '{print $5}')
+natom=$(grep -m 1 NION OUTCAR |awk '{print $12}')
+timestep=$(grep -m 1 POTIM OUTCAR | awk '{print $3}')
+TEBEG=$(grep -m 1 TEBEG OUTCAR | awk '{print $3}')
+TEEND=$(grep -m 1 TEBEG OUTCAR | awk '{print $5}')
+
+#echo ${TEBEG::end-1}
+#echo ${TEBEG::$((${#TEBEG} - 1))} 
 
 TEEND="${TEEND:1}"
-TEBEG="${TEBEG::end-1}"
+#TEBEG="${TEBEG::end-1}"
+TEBEG="${TEBEG::$((${#TEBEG} - 1))}"
 
 echo $natom>metadata
 echo $timestep >>metadata
